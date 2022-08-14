@@ -12,7 +12,7 @@ on:
     paths:
     - guestbook-go/**
 
-name: Build and Push to DockerHub
+name: Build and Push to DockerHub on PR merge or specific commit
 
 jobs:
   build-and-push:
