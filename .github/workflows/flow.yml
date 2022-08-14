@@ -1,15 +1,13 @@
 on:
-  pull_request:
-    paths:
-    - guestbook-go/**
-  push:
-    paths:
-    - guestbook-go/**
-    branches:        
-    - master         
-  workflow_dispatch:
-    tags:
-      description: 'Test scenario tags'
+  [workflow_dispatch]
+  # pull_request:
+  #   paths:
+  #   - guestbook-go/**
+  # push:
+  #   paths:
+  #   - guestbook-go/**
+  #   branches:        
+  #   - master         
 
 name: Build and Push to DockerHub
 
