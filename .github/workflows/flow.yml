@@ -7,6 +7,9 @@ on:
     - guestbook-go/**
     branches:        
     - master         
+  workflow_dispatch:
+    tags:
+      description: 'Test scenario tags'
 
 name: Build and Push to DockerHub
 
