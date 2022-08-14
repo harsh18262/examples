@@ -1,0 +1,35 @@
+on:
+  pull_request:
+    branches:
+    - master
+    paths:
+    - guestbook-go/**
+    types:
+    - closed
+  push:
+    branches:
+      - master
+    paths:
+    - guestbook-go/**
+
+name: Build and Push to DockerHub
+
+jobs:
+  build-and-push:
+    name: Build and push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'BUILD_CONTAINER_IMAGE') || github.event.pull_request.merged == true
+    steps:
+      - name: Check out GitHub repo
+        uses: actions/checkout@v2
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.Dockerhub_User }}
+          password: ${{ secrets.Dockerhub_Pass }}
+      - name: Build image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: guestbook-go/
+          push: true
+          tags: ${{ secrets.Dockerhub_User }}/guestbook:${{ github.sha }}
