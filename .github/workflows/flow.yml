@@ -11,9 +11,6 @@ on:
 
 name: Build and Push to DockerHub
 
-env:
-  CONTAINER_IMAGE: ${{ secrets.Dockerhub_User }}/guestbook:${{ github.sha }}
-
 jobs:
   build-and-push:
     name: Build and push Docker image to Docker Hub
@@ -31,4 +28,4 @@ jobs:
         with:
           context: guestbook-go/
           push: true
-          tags: $CONTAINER_IMAGE
+          tags: ${{ secrets.Dockerhub_User }}/guestbook:${{ github.sha }}
