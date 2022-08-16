@@ -13,6 +13,8 @@ on:
     - guestbook-go/**
 
 name: Build and Push to DockerHub on PR merge or specific commit
+env:
+  Image_Name: ${{ secrets.Dockerhub_User }}/guestbook:${{ github.sha }}
 
 jobs:
   build-and-push:
@@ -36,7 +38,13 @@ jobs:
       - name: Build image and push to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          platforms: linux/arm/v7,linux/amd64
+          platforms: linux/arm64
           context: guestbook-go/
           push: true
-          tags: ${{ secrets.Dockerhub_User }}/guestbook:${{ github.sha }}
+          tags: $Image_Name
+      - name: setup kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          mkdir ~/.kube
+          echo ${{secrets.KUBE_CONFIG}} > ~/.kube/config
+          cat ~/.kube/config
