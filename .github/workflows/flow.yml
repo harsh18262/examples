@@ -10,6 +10,8 @@ on:
   #   - master         
 
 name: Build and Push to DockerHub
+env:
+  Image_Name: ${{ secrets.Dockerhub_User }}/guestbook:${{ github.sha }}
 
 jobs:
   build-and-push:
@@ -37,3 +39,12 @@ jobs:
           context: guestbook-go/
           push: true
           tags: ${{ secrets.Dockerhub_User }}/guestbook:${{ github.sha }}
+      - name: Set Kubernetes Context
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }} 
+      - name: Deploy to Cluster
+        run: |
+          sed -i'' -e 's/DEPLOY_IMAGE/$Image_Name/g' kube/frontend-deployment.yml
+          kubectl apply -f kube/frontend-deployment.yml
