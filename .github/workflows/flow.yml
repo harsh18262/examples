@@ -46,5 +46,5 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }} 
       - name: Deploy to Cluster
         run: |
-          sed -i'' -e "s/DEPLOY_IMAGE/$Image_Name/g" kube/frontend-deployment.yml
+          sed -i'' -e "s|DEPLOY_IMAGE|$Image_Name|g" kube/frontend-deployment.yml
           kubectl apply -f kube/frontend-deployment.yml
