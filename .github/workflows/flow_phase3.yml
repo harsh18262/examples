@@ -43,9 +43,12 @@ jobs:
           context: guestbook-go/
           push: true
           tags: $Image_Name
-      - name: setup kubectl
+      - name: Set Kubernetes Context
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }} 
+      - name: Deploy to Cluster
         run: |
-             curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-             mkdir ~/.kube
-             echo ${{secrets.KUBE_CONFIG}} > ~/.kube/config
-             cat ~/.kube/config
+          sed -i'' -e 's/DEPLOY_IMAGE/$Image_Name/g' kube/frontend-deployment.yml
+          kubectl apply -f kube/frontend-deployment.yml
