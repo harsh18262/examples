@@ -21,7 +21,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-
+	
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/xyproto/simpleredis"
@@ -75,10 +75,10 @@ func HandleError(result interface{}, err error) (r interface{}) {
 
 func main() {
 	//masterPool = simpleredis.NewConnectionPoolHost("redis-master:6379")
-	masterPool = simpleredis.NewConnectionPoolHost(os.Getenv("redis_master"))
+	masterPool = simpleredis.NewConnectionPoolHost("10.42.0.32:6379")
 	defer masterPool.Close()
 	//replicaPool = simpleredis.NewConnectionPoolHost("redis-replica:6379")
-	replicaPool = simpleredis.NewConnectionPoolHost(os.Getenv("redis_replica"))
+	replicaPool = simpleredis.NewConnectionPoolHost("10.42.0.29:6379")
 	defer replicaPool.Close()
 
 	r := mux.NewRouter()
