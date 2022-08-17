@@ -1,17 +1,16 @@
 on:
-  [workflow_dispatch]
-  # pull_request:
-  #   branches:
-  #   - master
-  #   paths:
-  #   - guestbook-go/**
-  #   types:
-  #   - closed
-  # push:
-  #   branches:
-  #     - master
-  #   paths:
-  #   - guestbook-go/**
+  pull_request:
+    branches:
+    - master
+    paths:
+    - guestbook-go/**
+    types:
+    - closed
+  push:
+    branches:
+      - master
+    paths:
+    - guestbook-go/**
 
 name: Build and Push to DockerHub on PR merge or specific commit
 env:
