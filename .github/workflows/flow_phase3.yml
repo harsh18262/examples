@@ -22,6 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.message, 'BUILD_CONTAINER_IMAGE') || github.event.pull_request.merged == true
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - name: Set-env
+        run: |
+            export Image_Name="${{ secrets.Dockerhub_User }}/guestbook:$(date +%s)-${{ github.sha }}-${{ steps.extract_branch.outputs.branch }}"
+            echo $Image_Name
       - name: Check out GitHub repo
         uses: actions/checkout@v2
       
