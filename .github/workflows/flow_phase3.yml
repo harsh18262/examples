@@ -26,13 +26,13 @@ jobs:
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
-      - name: Set-env
-        run: |
-            export Image_Name="${{ secrets.Dockerhub_User }}/guestbook:$(date +%s)-${{ github.sha }}-${{ steps.extract_branch.outputs.branch }}"
-            echo $Image_Name
       - name: Check out GitHub repo
         uses: actions/checkout@v2
-      
+      - name: Set-env
+        run: |
+            export Image_Name="${{ secrets.Dockerhub_User }}/guestbook:$(date +%s)-$(git rev-parse --short HEAD)-${{ steps.extract_branch.outputs.branch }}"
+             echo "##[set-output name=Image_Name;]$(echo $Image_Name)"
+        id: env-set
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v2
@@ -49,7 +49,7 @@ jobs:
           platforms: linux/arm64
           context: guestbook-go/
           push: true
-          tags: $Image_Name
+          tags: ${{ steps.env-set.outputs.Image_Name }}
       - name: Set Kubernetes Context
         uses: azure/k8s-set-context@v1
         with:
